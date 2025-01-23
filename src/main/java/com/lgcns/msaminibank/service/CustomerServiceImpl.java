@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Objects;
+
 @Service
 @RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
@@ -17,9 +20,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public Integer createCustomer(CustomerDto request) {
-        boolean existing = customerRepository.existsById(request.cstmId());
-
-        if (existing) {
+        if (customerRepository.existsById(request.cstmId())) {
             throw new BusinessException("아이디 중복");
         }
 
@@ -32,8 +33,30 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional(readOnly = true)
     public CustomerDto retrieveCustomer(Integer id) {
-        Customer customer = customerRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("고객 없음"));
+        Customer customer = findOrThrow(id);
+
+        return CustomerDto.from(customer);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<CustomerDto> retrieveCustomers() {
+        return customerRepository.findAll()
+                .stream()
+                .map(CustomerDto::from)
+                .toList();
+    }
+
+    @Override
+    public CustomerDto updateCustomer(Integer cstmId, CustomerDto update) {
+        Customer customer = findOrThrow(cstmId);
+
+        if (!Objects.equals(customer.getCstmId(), update.cstmId())) {
+            throw new BusinessException("아이디 수정 불가");
+        }
+
+        customer.update(update.cstmId(), update.cstmNm(), update.cstmAge(), update.cstmGnd(), update.cstmPn(), update.cstmAdr());
+        customerRepository.save(customer);
 
         return CustomerDto.from(customer);
     }
@@ -41,5 +64,10 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Boolean existsCustomer(Integer id) {
         return null;
+    }
+
+    private Customer findOrThrow(Integer cstmId) {
+        return customerRepository.findById(cstmId)
+                .orElseThrow(() -> new BusinessException("고객 없음"));
     }
 }

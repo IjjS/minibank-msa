@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/rest/v0.8")
 @RequiredArgsConstructor
@@ -22,9 +24,23 @@ public class CustomerController {
                 .body(new IdResponse(id));
     }
 
+    @GetMapping
+    public ResponseEntity<List<CustomerDto>> retrieveCustomers() {
+        List<CustomerDto> response = customerService.retrieveCustomers();
+
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/{cstmId}")
     public ResponseEntity<CustomerDto> retrieveCustomer(@PathVariable("cstmId") Integer cstmId) {
         CustomerDto response = customerService.retrieveCustomer(cstmId);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{cstmId}")
+    public ResponseEntity<CustomerDto> updateCustomer(@PathVariable("cstmId") Integer cstmId, @RequestBody CustomerDto request) {
+        CustomerDto response = customerService.updateCustomer(cstmId, request);
 
         return ResponseEntity.ok(response);
     }
