@@ -19,3 +19,19 @@ springdoc:
     operations-sorter: alpha
 client-api:
   customer-url: http://localhost:8076
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoint:
+    health:
+      show-details: always
+resilience4j:
+  circuitbreaker:
+    instances:
+      customer:
+        register-health-indicator: true
+        slow-call-rate-threshold: 100
+        slow-call-duration-threshold: 5000
+        sliding-window-size: 10
+        minimum-number-of-calls: 1
