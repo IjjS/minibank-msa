@@ -17,3 +17,5 @@ springdoc:
     path: /docs
     filter: true
     operations-sorter: alpha
+client-api:
+  customer-url: http://localhost:8076
