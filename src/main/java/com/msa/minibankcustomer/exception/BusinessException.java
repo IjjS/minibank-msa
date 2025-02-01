@@ -1,6 +1,4 @@
-package com.lgcns.msaminibank.exception;
-
-import lombok.Getter;
+package com.msa.minibankcustomer.exception;
 
 public class BusinessException extends RuntimeException {
 

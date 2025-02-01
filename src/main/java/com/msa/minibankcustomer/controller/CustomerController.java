@@ -1,8 +1,8 @@
-package com.lgcns.msaminibank.controller;
+package com.msa.minibankcustomer.controller;
 
-import com.lgcns.msaminibank.dto.CustomerDto;
-import com.lgcns.msaminibank.dto.IdResponse;
-import com.lgcns.msaminibank.service.CustomerService;
+import com.msa.minibankcustomer.dto.CustomerDto;
+import com.msa.minibankcustomer.dto.IdResponse;
+import com.msa.minibankcustomer.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,10 +18,10 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity<IdResponse> createCustomer(@RequestBody CustomerDto request) {
-        Integer id = customerService.createCustomer(request);
+        IdResponse response = customerService.createCustomer(request);
 
         return ResponseEntity.created(null)
-                .body(new IdResponse(id));
+                .body(response);
     }
 
     @GetMapping
@@ -31,16 +31,16 @@ public class CustomerController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{cstmId}")
-    public ResponseEntity<CustomerDto> retrieveCustomer(@PathVariable("cstmId") Integer cstmId) {
-        CustomerDto response = customerService.retrieveCustomer(cstmId);
+    @GetMapping("/{id}")
+    public ResponseEntity<CustomerDto> retrieveCustomer(@PathVariable("id") Long id) {
+        CustomerDto response = customerService.retrieveCustomer(id);
 
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{cstmId}")
-    public ResponseEntity<CustomerDto> updateCustomer(@PathVariable("cstmId") Integer cstmId, @RequestBody CustomerDto request) {
-        CustomerDto response = customerService.updateCustomer(cstmId, request);
+    @PutMapping("/{id}")
+    public ResponseEntity<CustomerDto> updateCustomer(@PathVariable("id") Long id, @RequestBody CustomerDto request) {
+        CustomerDto response = customerService.updateCustomer(id, request);
 
         return ResponseEntity.ok(response);
     }

@@ -1,4 +1,4 @@
-package com.lgcns.msaminibank.exception;
+package com.msa.minibankcustomer.exception;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

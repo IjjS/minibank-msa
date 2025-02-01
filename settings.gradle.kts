@@ -1,1 +1,1 @@
-rootProject.name = "msa-minibank"
+rootProject.name = "minibank-customer"

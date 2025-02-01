@@ -1,9 +1,10 @@
-package com.lgcns.msaminibank.service;
+package com.msa.minibankcustomer.service;
 
-import com.lgcns.msaminibank.domain.Customer;
-import com.lgcns.msaminibank.dto.CustomerDto;
-import com.lgcns.msaminibank.exception.BusinessException;
-import com.lgcns.msaminibank.repository.CustomerRepository;
+import com.msa.minibankcustomer.domain.Customer;
+import com.msa.minibankcustomer.dto.CustomerDto;
+import com.msa.minibankcustomer.dto.IdResponse;
+import com.msa.minibankcustomer.exception.BusinessException;
+import com.msa.minibankcustomer.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,20 +20,20 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public Integer createCustomer(CustomerDto request) {
-        if (customerRepository.existsById(request.cstmId())) {
+    public IdResponse createCustomer(CustomerDto request) {
+        if (customerRepository.existsById(request.id())) {
             throw new BusinessException("아이디 중복");
         }
 
-        Customer customer = new Customer(request.cstmId(), request.cstmNm(), request.cstmAge(), request.cstmGnd(), request.cstmPn(), request.cstmAdr());
+        Customer customer = new Customer(request.id(), request.name(), request.age(), request.gender(), request.phoneNumber(), request.address());
         Customer saved = customerRepository.save(customer);
 
-        return saved.getCstmId();
+        return new IdResponse(saved.getId());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public CustomerDto retrieveCustomer(Integer id) {
+    public CustomerDto retrieveCustomer(Long id) {
         Customer customer = findOrThrow(id);
 
         return CustomerDto.from(customer);
@@ -48,26 +49,26 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDto updateCustomer(Integer cstmId, CustomerDto update) {
-        Customer customer = findOrThrow(cstmId);
+    public CustomerDto updateCustomer(Long id, CustomerDto update) {
+        Customer customer = findOrThrow(id);
 
-        if (!Objects.equals(customer.getCstmId(), update.cstmId())) {
+        if (!Objects.equals(customer.getId(), update.id())) {
             throw new BusinessException("아이디 수정 불가");
         }
 
-        customer.update(update.cstmId(), update.cstmNm(), update.cstmAge(), update.cstmGnd(), update.cstmPn(), update.cstmAdr());
+        customer.update(update.id(), update.name(), update.age(), update.gender(), update.phoneNumber(), update.address());
         customerRepository.save(customer);
 
         return CustomerDto.from(customer);
     }
 
     @Override
-    public Boolean existsCustomer(Integer id) {
+    public Boolean existsCustomer(Long id) {
         return null;
     }
 
-    private Customer findOrThrow(Integer cstmId) {
-        return customerRepository.findById(cstmId)
+    private Customer findOrThrow(Long id) {
+        return customerRepository.findById(id)
                 .orElseThrow(() -> new BusinessException("고객 없음"));
     }
 }

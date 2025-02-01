@@ -1,4 +1,4 @@
-package com.lgcns.msaminibank.exception;
+package com.msa.minibankcustomer.exception;
 
 public record ErrorResponse(String message) {
 }

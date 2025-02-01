@@ -1,10 +1,10 @@
-package com.lgcns.msaminibank;
+package com.msa.minibankcustomer;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MsaMinibankApplicationTests {
+class MinibankCustomerApplicationTests {
 
     @Test
     void contextLoads() {
