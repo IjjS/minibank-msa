@@ -1,0 +1,14 @@
+server:
+  port: 8761
+spring:
+  application:
+    name: minibank-eureka-server
+eureka:
+  server:
+    response-cache-update-interval-ms: 10000
+    enable-self-preservation: false
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+  instance:
+    prefer-ip-address: true
