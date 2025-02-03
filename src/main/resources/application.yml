@@ -20,7 +20,7 @@ springdoc:
     filter: true
     operations-sorter: alpha
 client-api:
-  customer-url: http://localhost:8076
+  customer-url: http://minibank-customer
 management:
   health:
     circuitbreakers:
