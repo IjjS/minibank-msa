@@ -24,17 +24,24 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    // Web
     implementation("org.springframework.boot:spring-boot-starter-web")
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
 
+    // Persistence
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     runtimeOnly("org.postgresql:postgresql")
 
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.3")
+    // Eureka Client
+    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:4.2.0")
 
+    // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    // Swagger
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.3")
 }
 
 tasks.withType<Test> {
