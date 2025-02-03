@@ -1,19 +1,24 @@
 package com.msa.minibankcustomer.service;
 
-import com.msa.minibankcustomer.dto.CustomerDto;
-import com.msa.minibankcustomer.dto.IdResponse;
+import com.msa.minibankcustomer.dto.request.CreateCustomerRequest;
+import com.msa.minibankcustomer.dto.request.UpdateCustomerRequest;
+import com.msa.minibankcustomer.dto.response.CustomerDetailResponse;
+import com.msa.minibankcustomer.dto.response.IdResponse;
+import com.msa.minibankcustomer.dto.response.SimpleCustomerResponse;
 
 import java.util.List;
 
 public interface CustomerService {
 
-    IdResponse createCustomer(CustomerDto request);
+    IdResponse createCustomer(CreateCustomerRequest request);
 
-    CustomerDto retrieveCustomer(Long id);
+    SimpleCustomerResponse retrieveCustomer(Long id);
 
-    List<CustomerDto> retrieveCustomers();
+    CustomerDetailResponse retrieveCustomerDetail(Long id);
 
-    CustomerDto updateCustomer(Long id, CustomerDto update);
+    List<SimpleCustomerResponse> retrieveCustomers();
+
+    SimpleCustomerResponse updateCustomer(Long id, UpdateCustomerRequest update);
 
     Boolean existsCustomer(Long id);
 

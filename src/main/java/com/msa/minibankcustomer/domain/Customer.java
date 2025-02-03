@@ -1,9 +1,7 @@
 package com.msa.minibankcustomer.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "tb_customers")
@@ -13,18 +11,34 @@ import lombok.NoArgsConstructor;
 public class Customer {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String age;
-    private String gender;
+    private Integer age;
+
+    @Getter(AccessLevel.NONE)
+    private Gender gender;
     private String phoneNumber;
     private String address;
 
-    public void update(Long customerId, String name, String age, String gender, String phoneNumber, String address) {
+    @Builder
+    private Customer(String name, Integer age, String gender, String phoneNumber, String address) {
+        this.name = name;
+        this.age = age;
+        this.gender = Gender.get(gender);
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+    }
+
+    public String getGender() {
+        return this.gender.getCode();
+    }
+
+    public void update(Long customerId, String name, Integer age, String gender, String phoneNumber, String address) {
         this.id = customerId;
         this.name = name;
         this.age = age;
-        this.gender = gender;
+        this.gender = Gender.get(gender);
         this.phoneNumber = phoneNumber;
         this.address = address;
     }
