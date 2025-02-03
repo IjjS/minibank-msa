@@ -1,5 +1,7 @@
 server:
   port: 8074
+  servlet:
+    context-path: /minibank/transfer
 spring:
   application:
     name: minibank-transfer
