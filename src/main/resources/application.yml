@@ -5,8 +5,6 @@ spring:
     name: minibank-gateway
   cloud:
     gateway:
-      default-filters:
-        - RewritePath=([^/])$,$1
       routes:
         - id: minibank-account
           uri: lb://minibank-account
