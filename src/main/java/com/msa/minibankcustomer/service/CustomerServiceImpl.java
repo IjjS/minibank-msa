@@ -1,8 +1,15 @@
 package com.msa.minibankcustomer.service;
 
+import com.msa.minibankcustomer.client.account.AccountFeignClient;
+import com.msa.minibankcustomer.client.transfer.TransferFeignClient;
 import com.msa.minibankcustomer.domain.Customer;
-import com.msa.minibankcustomer.dto.CustomerDto;
-import com.msa.minibankcustomer.dto.IdResponse;
+import com.msa.minibankcustomer.dto.AccountDto;
+import com.msa.minibankcustomer.dto.TransferLimitDto;
+import com.msa.minibankcustomer.dto.request.CreateCustomerRequest;
+import com.msa.minibankcustomer.dto.request.UpdateCustomerRequest;
+import com.msa.minibankcustomer.dto.response.CustomerDetailResponse;
+import com.msa.minibankcustomer.dto.response.IdResponse;
+import com.msa.minibankcustomer.dto.response.SimpleCustomerResponse;
 import com.msa.minibankcustomer.exception.BusinessException;
 import com.msa.minibankcustomer.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,49 +24,64 @@ import java.util.Objects;
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final AccountFeignClient accountFeignClient;
+    private final TransferFeignClient transferFeignClient;
 
     @Override
     @Transactional
-    public IdResponse createCustomer(CustomerDto request) {
-        if (customerRepository.existsById(request.id())) {
-            throw new BusinessException("아이디 중복");
-        }
-
-        Customer customer = new Customer(request.id(), request.name(), request.age(), request.gender(), request.phoneNumber(), request.address());
+    public IdResponse createCustomer(CreateCustomerRequest request) {
+        Customer customer = Customer.builder()
+                .name(request.name())
+                .age(request.age())
+                .gender(request.gender())
+                .address(request.address())
+                .phoneNumber(request.phoneNumber())
+                .build();
         Customer saved = customerRepository.save(customer);
+
+        transferFeignClient.createFirstLimit(saved.getId());
 
         return new IdResponse(saved.getId());
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public CustomerDto retrieveCustomer(Long id) {
+    public SimpleCustomerResponse retrieveCustomer(Long id) {
         Customer customer = findOrThrow(id);
 
-        return CustomerDto.from(customer);
+        return SimpleCustomerResponse.from(customer);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<CustomerDto> retrieveCustomers() {
+    public CustomerDetailResponse retrieveCustomerDetail(Long id) {
+        Customer customer = findOrThrow(id);
+        List<AccountDto> accounts = accountFeignClient.retrieveAccounts(customer.getId());
+        TransferLimitDto transferLimit = transferFeignClient.retrieveTransferLimit(customer.getId());
+
+        return CustomerDetailResponse.from(customer, accounts, transferLimit);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<SimpleCustomerResponse> retrieveCustomers() {
         return customerRepository.findAll()
                 .stream()
-                .map(CustomerDto::from)
+                .map(SimpleCustomerResponse::from)
                 .toList();
     }
 
     @Override
-    public CustomerDto updateCustomer(Long id, CustomerDto update) {
+    public SimpleCustomerResponse updateCustomer(Long id, UpdateCustomerRequest update) {
         Customer customer = findOrThrow(id);
 
         if (!Objects.equals(customer.getId(), update.id())) {
-            throw new BusinessException("아이디 수정 불가");
+            throw new BusinessException("수정 불가");
         }
 
         customer.update(update.id(), update.name(), update.age(), update.gender(), update.phoneNumber(), update.address());
         customerRepository.save(customer);
 
-        return CustomerDto.from(customer);
+        return SimpleCustomerResponse.from(customer);
     }
 
     @Override
