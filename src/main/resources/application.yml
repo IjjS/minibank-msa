@@ -1,0 +1,22 @@
+server:
+  port: 80
+spring:
+  application:
+    name: minibank-gateway
+  cloud:
+    gateway:
+      default-filters:
+        - RewritePath=([^/])$,$1
+      routes:
+        - id: minibank-account
+          uri: lb://minibank-account
+          predicates:
+            - Path=/minibank/account/**
+        - id: minibank-customer
+          uri: lb://minibank-customer
+          predicates:
+            - Path=/minibank/customer/**
+        - id: minibank-transfer
+          uri: lb://minibank-transfer
+          predicates:
+            - Path=/minibank/transfer/**
