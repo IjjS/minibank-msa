@@ -1,6 +1,6 @@
 package com.msa.minibankaccount.client.customer;
 
-import com.msa.minibankaccount.client.RestClientProperties;
+import com.msa.minibankaccount.config.RestClientProperties;
 import com.msa.minibankaccount.exception.BusinessException;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;

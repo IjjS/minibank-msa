@@ -15,6 +15,15 @@ spring:
     url: jdbc:postgresql://localhost:5432/account
   application:
     name: minibank-account
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
+      client:
+        config:
+          default:
+            connect-timeout: 30000
+            read-timeout: 30000
 springdoc:
   swagger-ui:
     disable-swagger-default-url: true

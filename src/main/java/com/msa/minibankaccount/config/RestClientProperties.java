@@ -1,4 +1,4 @@
-package com.msa.minibankaccount.client;
+package com.msa.minibankaccount.config;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
