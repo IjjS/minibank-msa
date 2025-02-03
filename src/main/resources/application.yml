@@ -1,5 +1,7 @@
 server:
   port: 8075
+  servlet:
+    context-path: /minibank/account
 spring:
   jpa:
     hibernate:
