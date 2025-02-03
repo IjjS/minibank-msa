@@ -1,0 +1,24 @@
+server:
+  port: 8074
+spring:
+  application:
+    name: minibank-transfer
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: admin1234
+    url: jdbc:postgresql://localhost:5432/transfer
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    open-in-view: false
+springdoc:
+  swagger-ui:
+    disable-swagger-default-url: true
+    path: /docs
+    filter: true
+    operations-sorter: alpha
+eureka:
+  instance:
+    prefer-ip-address: true
