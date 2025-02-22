@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -59,7 +60,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     private TransactionHistory saveHistory(Account account, String transferBranch, BigDecimal transferAmount, DivisionCode divisionCode) {
-        Long lastSequence = transactionHistoryRepository.findLastSequenceByAccountNumber(account.getAccountNumber());
+        Long lastSequence = Objects.requireNonNullElse(transactionHistoryRepository.findLastSequenceByAccountNumber(account.getAccountNumber()), 0L);
         TransactionHistory history = TransactionHistory.builder()
                 .accountNumber(account.getAccountNumber())
                 .sequence(lastSequence + 1)
