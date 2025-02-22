@@ -5,7 +5,7 @@ plugins {
 }
 val springCloudVersion by extra("2024.0.0")
 
-group = "com.lgcns"
+group = "com.msa"
 version = "0.0.1-SNAPSHOT"
 
 java {
