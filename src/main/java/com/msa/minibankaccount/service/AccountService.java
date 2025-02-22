@@ -1,8 +1,8 @@
 package com.msa.minibankaccount.service;
 
-import com.msa.minibankaccount.dto.AccountDto;
-import com.msa.minibankaccount.dto.AccountNumberResponse;
-import com.msa.minibankaccount.dto.RegisterAccountRequest;
+import com.msa.minibankaccount.dto.request.RegisterAccountRequest;
+import com.msa.minibankaccount.dto.response.AccountNumberResponse;
+import com.msa.minibankaccount.dto.response.AccountResponse;
 
 import java.util.List;
 
@@ -10,8 +10,8 @@ public interface AccountService {
 
     AccountNumberResponse register(RegisterAccountRequest request);
 
-    List<AccountDto> retrieveAllOfCustomer(Long customerId);
+    List<AccountResponse> retrieveAllOfCustomer(Long customerId);
 
-    AccountDto retrieveOne(Long accountNumber);
+    AccountResponse retrieveOne(Long accountNumber);
 
 }
