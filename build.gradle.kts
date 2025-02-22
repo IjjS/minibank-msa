@@ -5,7 +5,7 @@ plugins {
 }
 val springCloudVersion by extra("2024.0.0")
 
-group = "com.lgcns"
+group = "com.msa"
 version = "0.0.1-SNAPSHOT"
 
 java {
@@ -27,6 +27,7 @@ repositories {
 dependencies {
     // Web
     implementation("org.springframework.boot:spring-boot-starter-web")
+    testImplementation("org.springframework.kafka:spring-kafka-test")
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
 
@@ -36,6 +37,9 @@ dependencies {
 
     // Resilience
     implementation("io.github.resilience4j:resilience4j-spring-boot3:2.2.0")
+
+    // Kafka
+    implementation("org.springframework.kafka:spring-kafka")
 
     // Open Feign
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
