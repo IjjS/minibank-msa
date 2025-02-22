@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 @FeignClient("minibank-transfer")
 public interface TransferFeignClient {
 
-    @PostMapping("/minibank/transfer/rest/v0.8/{customerId}")
+    @PostMapping("/minibank/transfer/rest/v0.8/limit/{customerId}")
     TransferLimitDto createFirstLimit(@PathVariable("customerId") Long customerId);
 
-    @GetMapping("/minibank/transfer/rest/v0.8/{customerId}/limit")
+    @GetMapping("/minibank/transfer/rest/v0.8/limit/{customerId}")
     TransferLimitDto retrieveTransferLimit(@PathVariable("customerId") Long customerId);
 
 }
