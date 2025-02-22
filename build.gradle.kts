@@ -41,6 +41,9 @@ dependencies {
     // Open Feign
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
 
+    // Resilience
+    implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j")
+
     // Kafka
     implementation("org.springframework.kafka:spring-kafka")
 
