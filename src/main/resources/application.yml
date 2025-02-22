@@ -9,12 +9,21 @@ spring:
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: admin1234
-    url: jdbc:postgresql://localhost:5432/transfer
+    url: jdbc:postgresql://localhost:5434/transfer
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
     open-in-view: false
+  kafka:
+    consumer:
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+    listener:
+      ack-mode: manual_immediate
+    bootstrap-servers: localhost:9092
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 springdoc:
   swagger-ui:
     disable-swagger-default-url: true
@@ -24,3 +33,5 @@ springdoc:
 eureka:
   instance:
     prefer-ip-address: true
+topics:
+  btob-transfer: btob-transfer
