@@ -8,8 +8,8 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 @Getter
 public enum DivisionCode {
-    DEPOSIT("0001"),
-    WITHDRAWAL("0002");
+    INWARD("0001"),
+    OUTWARD("0002");
 
     private final String code;
 
