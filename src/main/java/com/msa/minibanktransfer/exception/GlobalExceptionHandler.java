@@ -11,4 +11,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException exception) {
         return ResponseEntity.badRequest().body(new ErrorResponse(exception.getMessage()));
     }
+
+    @ExceptionHandler(SystemException.class)
+    public ResponseEntity<ErrorResponse> handleSystemException(SystemException exception) {
+        return ResponseEntity.internalServerError()
+                .body(new ErrorResponse(exception.getMessage()));
+    }
+
 }
