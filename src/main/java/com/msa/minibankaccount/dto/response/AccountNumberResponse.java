@@ -1,4 +1,4 @@
-package com.msa.minibankaccount.dto;
+package com.msa.minibankaccount.dto.response;
 
 public record AccountNumberResponse(Long accountNumber) {
 }
