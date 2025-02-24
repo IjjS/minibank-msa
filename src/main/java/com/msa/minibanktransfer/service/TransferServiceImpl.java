@@ -5,6 +5,7 @@ import com.msa.minibanktransfer.domain.DivisionCode;
 import com.msa.minibanktransfer.domain.StatusCode;
 import com.msa.minibanktransfer.domain.TransferHistory;
 import com.msa.minibanktransfer.domain.TransferLimit;
+import com.msa.minibanktransfer.dto.request.BankToBankTransferRequest;
 import com.msa.minibanktransfer.dto.request.TransferRequest;
 import com.msa.minibanktransfer.dto.request.WithdrawalRequest;
 import com.msa.minibanktransfer.dto.response.TransactionResult;
@@ -39,10 +40,12 @@ public class TransferServiceImpl implements TransferService {
                 .transferAmount(request.transferAmount())
                 .customerId(request.customerId())
                 .transferBranch(request.senderMemo())
+                .isFailed(request.isFailed())
                 .build();
         TransactionResult transactionResult = accountFeignClient.withdraw(withdrawalRequest);
+        BankToBankTransferRequest bankToBankRequest = BankToBankTransferRequest.from(request, transferHistory.getSequence(), transactionResult.sequence());
 
-        transferProducer.sendBToBTransfer(transactionResult);
+        transferProducer.sendBToBTransfer(bankToBankRequest);
 
         return new TransferHistoryIdResponse(transferHistory.getCustomerId(), transferHistory.getSequence());
     }
