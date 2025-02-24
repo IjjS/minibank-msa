@@ -1,0 +1,25 @@
+server:
+  port: 8079
+  servlet:
+    context-path: /minibank/btob-transfer
+spring:
+  application:
+    name: minibank-btob-transfer
+  kafka:
+    consumer:
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    listener:
+      ack-mode: manual_immediate
+    bootstrap-servers: localhost:9092
+eureka:
+  instance:
+    prefer-ip-address: true
+topics:
+  btob-transfer: btob-transfer
+  btob-transfer-result: btob-transfer-result
