@@ -1,7 +1,7 @@
 package com.msa.minibanktransfer.publisher;
 
 import com.msa.minibanktransfer.config.kafka.Topics;
-import com.msa.minibanktransfer.dto.response.TransactionResult;
+import com.msa.minibanktransfer.dto.request.BankToBankTransferRequest;
 import com.msa.minibanktransfer.exception.SystemException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,11 +17,11 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class TransferProducer {
 
-    private final KafkaTemplate<String, TransactionResult> transactionResultKafkaTemplate;
+    private final KafkaTemplate<String, BankToBankTransferRequest> bankToBankKafkaTemplate;
     private final Topics topics;
 
-    public void sendBToBTransfer(TransactionResult transactionResult) {
-        CompletableFuture<SendResult<String, TransactionResult>> future = transactionResultKafkaTemplate.send(topics.getBtobTransfer(), transactionResult);
+    public void sendBToBTransfer(BankToBankTransferRequest request) {
+        CompletableFuture<SendResult<String, BankToBankTransferRequest>> future = bankToBankKafkaTemplate.send(topics.getBtobTransfer(), request);
 
         future.whenComplete((result, exception) -> {
             if (Objects.nonNull(exception)) {

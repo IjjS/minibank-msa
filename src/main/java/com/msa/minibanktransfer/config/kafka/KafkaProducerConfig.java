@@ -1,6 +1,6 @@
 package com.msa.minibanktransfer.config.kafka;
 
-import com.msa.minibanktransfer.dto.response.TransactionResult;
+import com.msa.minibanktransfer.dto.request.BankToBankTransferRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -33,13 +33,13 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    ProducerFactory<String, TransactionResult> transactionResultProducerFactory(Map<String, Object> producerConfigProps) {
+    ProducerFactory<String, BankToBankTransferRequest> bankToBankTransferProducerFactory(Map<String, Object> producerConfigProps) {
         return new DefaultKafkaProducerFactory<>(producerConfigProps);
     }
 
     @Bean
-    KafkaTemplate<String, TransactionResult> transactionResultKafkaTemplate(ProducerFactory<String, TransactionResult> transactionResultResponseProducerFactory) {
-        return new KafkaTemplate<>(transactionResultResponseProducerFactory);
+    KafkaTemplate<String, BankToBankTransferRequest> bankToBankKafkaTemplate(ProducerFactory<String, BankToBankTransferRequest> bankToBankTransferProducerFactory) {
+        return new KafkaTemplate<>(bankToBankTransferProducerFactory);
     }
 
 }
