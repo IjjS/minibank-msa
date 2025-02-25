@@ -19,14 +19,19 @@ spring:
     consumer:
       auto-offset-reset: earliest
       enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
     listener:
       ack-mode: manual_immediate
     bootstrap-servers: localhost:9092
     producer:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
   cloud:
     openfeign:
       circuitbreaker:
+        enabled: true
+      okhttp:
         enabled: true
 springdoc:
   swagger-ui:
@@ -37,5 +42,10 @@ springdoc:
 eureka:
   instance:
     prefer-ip-address: true
-topics:
-  btob-transfer: btob-transfer
+kafka-config:
+  properties:
+    topics:
+      btob-transfer: btob-transfer
+      btob-transfer-result: btob-transfer-result
+    groups:
+      transfer-result: transferResult
