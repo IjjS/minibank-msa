@@ -53,4 +53,12 @@ public class TransferHistory {
         return customerSequence.getSequence();
     }
 
+    public void fail() {
+        this.statusCode = StatusCode.FAILED;
+    }
+
+    public void succeed() {
+        this.statusCode = StatusCode.SUCCESSFUL;
+    }
+
 }

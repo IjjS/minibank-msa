@@ -1,13 +1,12 @@
 package com.msa.minibanktransfer.service;
 
 import com.msa.minibanktransfer.client.AccountFeignClient;
-import com.msa.minibanktransfer.domain.DivisionCode;
-import com.msa.minibanktransfer.domain.StatusCode;
-import com.msa.minibanktransfer.domain.TransferHistory;
-import com.msa.minibanktransfer.domain.TransferLimit;
+import com.msa.minibanktransfer.domain.*;
 import com.msa.minibanktransfer.dto.request.BankToBankTransferRequest;
+import com.msa.minibanktransfer.dto.request.CancelWithdrawalRequest;
 import com.msa.minibanktransfer.dto.request.TransferRequest;
 import com.msa.minibanktransfer.dto.request.WithdrawalRequest;
+import com.msa.minibanktransfer.dto.response.BankToBankTransferResult;
 import com.msa.minibanktransfer.dto.response.TransactionResult;
 import com.msa.minibanktransfer.dto.response.TransferHistoryIdResponse;
 import com.msa.minibanktransfer.dto.response.TransferLimitResponse;
@@ -52,6 +51,25 @@ public class TransferServiceImpl implements TransferService {
 
     @Override
     @Transactional
+    public void applyTransferResult(BankToBankTransferResult transferResult) {
+        TransferHistory transferHistory = transferHistoryRepository.findById(new CustomerSequence(transferResult.customerId(), transferResult.customerSequence()))
+                .orElseThrow(() -> new BusinessException("이체 기록 없음"));
+
+        if (transferResult.isFailed()) {
+            CancelWithdrawalRequest request = new CancelWithdrawalRequest(transferResult.customerId(), transferResult.transferAmount());
+
+            accountFeignClient.cancelWithdrawal(transferResult.withdrawalAccountNumber(), transferResult.accountSequence(), request);
+            transferHistory.fail();
+
+            return;
+        }
+
+        accountFeignClient.confirmWithdrawal(transferResult.withdrawalAccountNumber(), transferResult.accountSequence());
+        transferHistory.succeed();
+    }
+
+    @Override
+    @Transactional
     public TransferLimitResponse createLimit(Long customerId) {
         if (transferLimitRepository.existsById(customerId)) {
             throw new BusinessException("이체 제한 정보 존재");
@@ -75,6 +93,8 @@ public class TransferServiceImpl implements TransferService {
         Long lastSequence = Objects.requireNonNullElse(transferHistoryRepository.findLastSequenceByCustomerId(request.customerId()), 0L);
         TransferHistory transferHistory = TransferHistory.builder()
                 .withdrawalAccountNumber(request.withdrawalAccountNumber())
+                .depositAccountNumber(request.depositAccountNumber())
+                .receiverCustomerName(request.receiverCustomerName())
                 .transferAmount(request.transferAmount())
                 .transferDateTime(LocalDateTime.now())
                 .receiverMemo(request.receiverMemo())
