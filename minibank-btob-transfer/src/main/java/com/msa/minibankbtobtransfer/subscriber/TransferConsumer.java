@@ -19,7 +19,7 @@ public class TransferConsumer {
 
     private final TransferProducer transferProducer;
 
-    @KafkaListener(topics = "${topics.btob-transfer}", containerFactory = "transactionResultContainerFactory")
+    @KafkaListener(topics = "${kafka-config.properties.topics.btob-transfer}", containerFactory = "transferContainerFactory")
     public void bankToBankTransferListener(TransferRequest request, Acknowledgment ack) {
         try {
             log.info("타행 이체 중 ...");

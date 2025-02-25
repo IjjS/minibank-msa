@@ -23,6 +23,7 @@ import java.util.Map;
 public class KafkaConsumerConfig {
 
     private final KafkaProperties kafkaProperties;
+    private final KafkaConfig kafkaConfig;
 
     @Bean
     Map<String, Object> consumerConfigProps() {
@@ -34,7 +35,7 @@ public class KafkaConsumerConfig {
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, consumer.getValueDeserializer());
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, consumer.getAutoOffsetReset());
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, consumer.getEnableAutoCommit());
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, "btobTransfer");
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, kafkaConfig.getBToBTransferGroup());
 
         return props;
     }
@@ -45,7 +46,7 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    ConcurrentKafkaListenerContainerFactory<String, TransferRequest> transactionResultContainerFactory(ConsumerFactory<String, TransferRequest> transferConsumerFactory) {
+    ConcurrentKafkaListenerContainerFactory<String, TransferRequest> transferContainerFactory(ConsumerFactory<String, TransferRequest> transferConsumerFactory) {
         ConcurrentKafkaListenerContainerFactory<String, TransferRequest> containerFactory = new ConcurrentKafkaListenerContainerFactory<>();
         KafkaProperties.Listener listener = kafkaProperties.getListener();
 

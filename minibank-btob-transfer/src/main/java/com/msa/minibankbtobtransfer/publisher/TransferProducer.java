@@ -1,6 +1,6 @@
 package com.msa.minibankbtobtransfer.publisher;
 
-import com.msa.minibankbtobtransfer.config.kafka.Topics;
+import com.msa.minibankbtobtransfer.config.kafka.KafkaConfig;
 import com.msa.minibankbtobtransfer.dto.TransferResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,10 +17,10 @@ import java.util.concurrent.CompletableFuture;
 public class TransferProducer {
 
     private final KafkaTemplate<String, TransferResult> transferKafkaTemplate;
-    private final Topics topics;
+    private final KafkaConfig kafkaConfig;
 
     public void sendTransferResult(TransferResult transferResult) {
-        CompletableFuture<SendResult<String, TransferResult>> future = transferKafkaTemplate.send(topics.getBtobTransferResult(), transferResult);
+        CompletableFuture<SendResult<String, TransferResult>> future = transferKafkaTemplate.send(kafkaConfig.getBToBTransferResultTopic(), transferResult);
 
         future.whenComplete((result, cause) -> {
             if (Objects.nonNull(cause)) {

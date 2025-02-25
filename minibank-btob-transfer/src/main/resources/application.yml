@@ -20,6 +20,10 @@ spring:
 eureka:
   instance:
     prefer-ip-address: true
-topics:
-  btob-transfer: btob-transfer
-  btob-transfer-result: btob-transfer-result
+kafka-config:
+  properties:
+    topics:
+      btob-transfer: btob-transfer
+      btob-transfer-result: btob-transfer-result
+    groups:
+      btob-transfer: btobTransfer
