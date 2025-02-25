@@ -56,4 +56,12 @@ public class TransactionHistory {
         this.statusCode = StatusCode.FAILED;
     }
 
+    public void confirm() {
+        this.statusCode = StatusCode.SUCCESSFUL;
+    }
+
+    public boolean isConfirmed() {
+        return this.statusCode != StatusCode.PENDING;
+    }
+
 }

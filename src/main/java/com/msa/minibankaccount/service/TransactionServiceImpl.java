@@ -1,9 +1,7 @@
 package com.msa.minibankaccount.service;
 
-import com.msa.minibankaccount.domain.Account;
-import com.msa.minibankaccount.domain.DivisionCode;
-import com.msa.minibankaccount.domain.StatusCode;
-import com.msa.minibankaccount.domain.TransactionHistory;
+import com.msa.minibankaccount.domain.*;
+import com.msa.minibankaccount.dto.request.CancelWithdrawalRequest;
 import com.msa.minibankaccount.dto.request.TransferRequest;
 import com.msa.minibankaccount.dto.response.TransactionResultResponse;
 import com.msa.minibankaccount.exception.BusinessException;
@@ -35,6 +33,38 @@ public class TransactionServiceImpl implements TransactionService {
         TransactionHistory transactionHistory = saveHistory(account, request.transferBranch(), request.transferAmount(), DivisionCode.WITHDRAWAL);
 
         return TransactionResultResponse.from(transactionHistory, previousBalance);
+    }
+
+    @Override
+    @Transactional
+    public TransactionResultResponse cancelWithdrawal(Long accountNumber, Long sequence, CancelWithdrawalRequest request) {
+        TransactionHistory transactionHistory = transactionHistoryRepository.findById(new AccountSequence(accountNumber, sequence))
+                .orElseThrow(() -> new BusinessException("전산 기록 없음"));
+
+        if (transactionHistory.isConfirmed()) {
+            throw new BusinessException("이미 확정된 기록");
+        }
+
+        Account account = findAccount(accountNumber, request.customerId());
+        BigDecimal previousBalance = account.getAccountBalance();
+
+        account.addDeposit(request.transferAmount());
+        transactionHistory.failTransfer();
+
+        return TransactionResultResponse.from(transactionHistory, previousBalance);
+    }
+
+    @Override
+    @Transactional
+    public void confirmWithdrawal(Long accountNumber, Long sequence) {
+        TransactionHistory transactionHistory = transactionHistoryRepository.findById(new AccountSequence(accountNumber, sequence))
+                .orElseThrow(() -> new BusinessException("전산 기록 없음"));
+
+        if (transactionHistory.isConfirmed()) {
+            throw new BusinessException("이미 확정된 기록");
+        }
+
+        transactionHistory.confirm();
     }
 
     @Override

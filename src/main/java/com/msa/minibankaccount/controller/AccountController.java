@@ -1,9 +1,10 @@
 package com.msa.minibankaccount.controller;
 
-import com.msa.minibankaccount.dto.request.TransferRequest;
-import com.msa.minibankaccount.dto.response.AccountResponse;
-import com.msa.minibankaccount.dto.response.AccountNumberResponse;
+import com.msa.minibankaccount.dto.request.CancelWithdrawalRequest;
 import com.msa.minibankaccount.dto.request.RegisterAccountRequest;
+import com.msa.minibankaccount.dto.request.TransferRequest;
+import com.msa.minibankaccount.dto.response.AccountNumberResponse;
+import com.msa.minibankaccount.dto.response.AccountResponse;
 import com.msa.minibankaccount.dto.response.TransactionResultResponse;
 import com.msa.minibankaccount.service.AccountService;
 import com.msa.minibankaccount.service.TransactionService;
@@ -60,9 +61,19 @@ public class AccountController {
     }
 
     @PatchMapping("/withdrawal/{accountNumber}/{sequence}")
-    public ResponseEntity<Void> cancelWithdrawal(@PathVariable("accountNumber") Long accountNumber, @PathVariable("sequence") Long sequence) {
+    public ResponseEntity<Void> confirmTransaction(@PathVariable("accountNumber") Long accountNumber, @PathVariable("sequence") Long sequence) {
+        transactionService.confirmWithdrawal(accountNumber, sequence);
+
         return ResponseEntity.noContent()
                 .build();
+    }
+
+    @PatchMapping("/withdrawal/{accountNumber}/{sequence}/cancel")
+    public ResponseEntity<TransactionResultResponse> cancelWithdrawal(@PathVariable("accountNumber") Long accountNumber, @PathVariable("sequence") Long sequence, @RequestBody CancelWithdrawalRequest request) {
+        TransactionResultResponse response = transactionService.cancelWithdrawal(accountNumber, sequence, request);
+
+        return ResponseEntity.ok()
+                .body(response);
     }
 
 }
