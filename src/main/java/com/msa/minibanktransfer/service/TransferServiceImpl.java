@@ -33,6 +33,8 @@ public class TransferServiceImpl implements TransferService {
     @Override
     @Transactional
     public TransferHistoryIdResponse transferBankToBank(TransferRequest request) {
+        validateAccountNumbersToTransfer(request.depositAccountNumber(), request.withdrawalAccountNumber());
+
         TransferHistory transferHistory = saveTransferHistory(request, DivisionCode.OUTWARD);
         WithdrawalRequest withdrawalRequest = WithdrawalRequest.builder()
                 .accountNumber(request.withdrawalAccountNumber())
@@ -106,6 +108,12 @@ public class TransferServiceImpl implements TransferService {
                 .build();
 
         return transferHistoryRepository.save(transferHistory);
+    }
+
+    private void validateAccountNumbersToTransfer(Long depositAccountNumber, Long withdrawalAccountNumber) {
+        if (depositAccountNumber.equals(withdrawalAccountNumber)) {
+            throw new BusinessException("같은 계좌로 이체 불가");
+        }
     }
 
 }
