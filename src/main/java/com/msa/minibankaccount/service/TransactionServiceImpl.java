@@ -46,12 +46,11 @@ public class TransactionServiceImpl implements TransactionService {
         }
 
         Account account = findAccount(accountNumber, request.customerId());
-        BigDecimal previousBalance = account.getAccountBalance();
 
         account.addDeposit(request.transferAmount());
-        transactionHistory.failTransfer();
+        transactionHistory.failTransfer(request.transferAmount());
 
-        return TransactionResultResponse.from(transactionHistory, previousBalance);
+        return TransactionResultResponse.from(transactionHistory, account.getAccountBalance());
     }
 
     @Override

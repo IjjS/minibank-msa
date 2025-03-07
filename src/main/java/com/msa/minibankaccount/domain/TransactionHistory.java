@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "tb_transaction_histories")
@@ -52,7 +53,11 @@ public class TransactionHistory {
         this.statusCode = StatusCode.SUCCESSFUL;
     }
 
-    public void failTransfer() {
+    public void failTransfer(BigDecimal appendBackAmount) {
+        if (Objects.nonNull(appendBackAmount)) {
+            this.accountBalance = this.accountBalance.add(appendBackAmount);
+        }
+
         this.statusCode = StatusCode.FAILED;
     }
 
