@@ -15,6 +15,11 @@ spring:
     url: jdbc:postgresql://localhost:5432/customer
   application:
     name: minibank-customer
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
 springdoc:
   swagger-ui:
     disable-swagger-default-url: true
@@ -24,3 +29,8 @@ springdoc:
 eureka:
   instance:
     prefer-ip-address: true
+kafka-config:
+  properties:
+    topics:
+      create: customer-create
+      update: customer-update
