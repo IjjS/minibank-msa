@@ -26,14 +26,14 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin1234
       POSTGRES_DB: transfer
-  cqrs-db:
-    image: postgres
-    container_name: minibank-cqrs-db
+  inquiry-db:
+    image: mongo
+    container_name: minibank-inquiry-db
     ports:
-      - '5435:5432'
+      - '27017:27017'
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: admin1234
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: admin1234
       POSTGRES_DB: cqrs
   minibank-kafka:
     image: apache/kafka

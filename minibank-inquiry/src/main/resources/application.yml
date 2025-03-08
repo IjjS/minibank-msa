@@ -1,0 +1,15 @@
+server:
+  port: 8078
+  servlet:
+    context-path: /minibank/inquiry
+spring:
+  application:
+    name: minibank-inquiry
+  data:
+    mongodb:
+      username: root
+      password: admin1234
+      database: inquiry
+      authentication-database: admin
+      port: 27017
+      host: localhost
