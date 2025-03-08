@@ -1,0 +1,26 @@
+server:
+  port: 8076
+  servlet:
+    context-path: /minibank/customer
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    open-in-view: false
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: admin1234
+    url: jdbc:postgresql://localhost:5432/customer
+  application:
+    name: minibank-customer
+springdoc:
+  swagger-ui:
+    disable-swagger-default-url: true
+    path: /docs
+    filter: true
+    operations-sorter: alpha
+eureka:
+  instance:
+    prefer-ip-address: true
