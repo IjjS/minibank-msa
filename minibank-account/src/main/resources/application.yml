@@ -1,0 +1,53 @@
+server:
+  port: 8075
+  servlet:
+    context-path: /minibank/account
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    open-in-view: false
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: admin1234
+    url: jdbc:postgresql://localhost:5433/account
+  application:
+    name: minibank-account
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
+      client:
+        config:
+          default:
+            connect-timeout: 30000
+            read-timeout: 30000
+springdoc:
+  swagger-ui:
+    disable-swagger-default-url: true
+    path: /docs
+    filter: true
+    operations-sorter: alpha
+client-api:
+  customer-url: http://minibank-customer
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoint:
+    health:
+      show-details: always
+resilience4j:
+  circuitbreaker:
+    instances:
+      customer:
+        register-health-indicator: true
+        slow-call-rate-threshold: 100
+        slow-call-duration-threshold: 5000
+        sliding-window-size: 10
+        minimum-number-of-calls: 1
+eureka:
+  instance:
+    prefer-ip-address: true
