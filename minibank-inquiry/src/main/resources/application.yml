@@ -13,3 +13,25 @@ spring:
       authentication-database: admin
       port: 27017
       host: localhost
+  kafka:
+    consumer:
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    listener:
+      ack-mode: manual_immediate
+    bootstrap-servers: localhost:9092
+kafka-config:
+  properties:
+    topics:
+      customer:
+        create: customer-create
+        update: customer-update
+      account:
+        create: account-create
+        update: account-update
+    groups:
+      customer: customer
+      account: account
+

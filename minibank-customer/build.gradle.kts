@@ -40,9 +40,13 @@ dependencies {
     // Eureka Client
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:4.2.0")
 
+    // Kafka
+    implementation("org.springframework.kafka:spring-kafka")
+
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation("org.springframework.kafka:spring-kafka-test")
 
     // Swagger
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.3")
