@@ -4,6 +4,7 @@ import com.msa.minibankcustomer.client.account.AccountFeignClient;
 import com.msa.minibankcustomer.client.transfer.TransferFeignClient;
 import com.msa.minibankcustomer.domain.Customer;
 import com.msa.minibankcustomer.dto.AccountDto;
+import com.msa.minibankcustomer.dto.CustomerInquiryDto;
 import com.msa.minibankcustomer.dto.TransferLimitDto;
 import com.msa.minibankcustomer.dto.request.CreateCustomerRequest;
 import com.msa.minibankcustomer.dto.request.UpdateCustomerRequest;
@@ -11,6 +12,7 @@ import com.msa.minibankcustomer.dto.response.CustomerDetailResponse;
 import com.msa.minibankcustomer.dto.response.IdResponse;
 import com.msa.minibankcustomer.dto.response.SimpleCustomerResponse;
 import com.msa.minibankcustomer.exception.BusinessException;
+import com.msa.minibankcustomer.publisher.CustomerInquiryProducer;
 import com.msa.minibankcustomer.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,7 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
     private final AccountFeignClient accountFeignClient;
     private final TransferFeignClient transferFeignClient;
+    private final CustomerInquiryProducer customerInquiryProducer;
 
     @Override
     @Transactional
@@ -38,8 +41,10 @@ public class CustomerServiceImpl implements CustomerService {
                 .phoneNumber(request.phoneNumber())
                 .build();
         Customer saved = customerRepository.save(customer);
+        TransferLimitDto limits = transferFeignClient.createFirstLimit(saved.getId());
+        CustomerInquiryDto customerInquiry = CustomerInquiryDto.from(saved, limits);
 
-        transferFeignClient.createFirstLimit(saved.getId());
+        customerInquiryProducer.sendCreatedCustomer(customerInquiry);
 
         return new IdResponse(saved.getId());
     }
