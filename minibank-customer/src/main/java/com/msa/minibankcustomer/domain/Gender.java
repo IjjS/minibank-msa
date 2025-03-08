@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @Getter
@@ -15,7 +16,7 @@ public enum Gender {
 
     public static Gender get(String code) {
         return Arrays.stream(Gender.values())
-                .filter(gender -> gender.code.equals(code))
+                .filter(gender -> Objects.equals(gender.code, code))
                 .findFirst()
                 .orElseThrow();
     }
