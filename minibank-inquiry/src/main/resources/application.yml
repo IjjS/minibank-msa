@@ -34,4 +34,13 @@ kafka-config:
     groups:
       customer: customer
       account: account
+springdoc:
+  swagger-ui:
+    disable-swagger-default-url: true
+    path: /docs
+    filter: true
+    operations-sorter: alpha
+eureka:
+  instance:
+    prefer-ip-address: true
 
