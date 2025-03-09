@@ -18,3 +18,7 @@ spring:
           uri: lb://minibank-transfer
           predicates:
             - Path=/minibank/transfer/**
+        - id: minibank-inquiry
+          uri: lb://minibank-inquiry
+          predicates:
+            - Path=/minibank/inquiry/**
