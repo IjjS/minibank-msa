@@ -24,6 +24,11 @@ spring:
           default:
             connect-timeout: 30000
             read-timeout: 30000
+  kafka:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    bootstrap-servers: localhost:9092
 springdoc:
   swagger-ui:
     disable-swagger-default-url: true
@@ -51,3 +56,8 @@ resilience4j:
 eureka:
   instance:
     prefer-ip-address: true
+kafka-config:
+  properties:
+    topics:
+      create: account-create
+      update: account-update
