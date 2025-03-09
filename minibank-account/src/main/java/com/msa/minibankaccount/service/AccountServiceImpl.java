@@ -7,17 +7,18 @@ import com.msa.minibankaccount.domain.Account;
 import com.msa.minibankaccount.domain.DivisionCode;
 import com.msa.minibankaccount.domain.StatusCode;
 import com.msa.minibankaccount.domain.TransactionHistory;
+import com.msa.minibankaccount.dto.CustomerInquiryAccountDto;
 import com.msa.minibankaccount.dto.request.RegisterAccountRequest;
 import com.msa.minibankaccount.dto.response.AccountNumberResponse;
 import com.msa.minibankaccount.dto.response.AccountResponse;
 import com.msa.minibankaccount.exception.BusinessException;
+import com.msa.minibankaccount.publisher.CustomerInquiryAccountProducer;
 import com.msa.minibankaccount.repository.AccountRepository;
 import com.msa.minibankaccount.repository.TransactionHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class AccountServiceImpl implements AccountService {
     private final CustomerRestClient customerRestClient;
     private final CustomerFeignClient customerFeignClient;
     private final TransactionHistoryRepository transactionHistoryRepository;
+    private final CustomerInquiryAccountProducer customerInquiryAccountProducer;
 
     @Override
     @Transactional
@@ -45,9 +47,11 @@ public class AccountServiceImpl implements AccountService {
         // OpenFeign
         CustomerDto customer = customerFeignClient.retrieveCustomer(request.customerId());
 
-        Account account = new Account(request.accountNumber(), request.accountName(), customer.id(), customer.name(), BigDecimal.ZERO, LocalDateTime.now());
+        Account account = new Account(request.accountNumber(), request.accountName(), customer.id(), customer.name(), request.initialBalance(), LocalDateTime.now());
+        CustomerInquiryAccountDto accountForInquiry = CustomerInquiryAccountDto.from(account);
 
         accountRepository.save(account);
+        customerInquiryAccountProducer.sendCreatedAccount(accountForInquiry);
 
         TransactionHistory firstHistory = TransactionHistory.builder()
                 .accountNumber(account.getAccountNumber())
