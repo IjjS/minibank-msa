@@ -34,7 +34,6 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: admin1234
-      POSTGRES_DB: cqrs
   minibank-kafka:
     image: apache/kafka
     hostname: minibank-kafka
