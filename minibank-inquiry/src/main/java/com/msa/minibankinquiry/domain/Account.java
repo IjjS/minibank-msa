@@ -1,8 +1,20 @@
 package com.msa.minibankinquiry.domain;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public record Account(Long accountNumber, String accountName, BigDecimal accountBalance, LocalDateTime newDateTime) {
+@RequiredArgsConstructor
+@Builder
+@Getter
+public final class Account {
+
+    private final Long accountNumber;
+    private final String accountName;
+    private final BigDecimal accountBalance;
+    private final LocalDateTime newDateTime;
 
 }
