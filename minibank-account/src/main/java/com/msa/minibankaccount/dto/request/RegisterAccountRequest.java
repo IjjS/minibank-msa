@@ -1,4 +1,6 @@
 package com.msa.minibankaccount.dto.request;
 
-public record RegisterAccountRequest(Long accountNumber, String accountName, Long customerId, String transferBranch) {
+import java.math.BigDecimal;
+
+public record RegisterAccountRequest(Long accountNumber, String accountName, Long customerId, String transferBranch, BigDecimal initialBalance) {
 }
